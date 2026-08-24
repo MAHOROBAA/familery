@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 type Photo = {
   id: number;
@@ -26,6 +27,7 @@ const mockPhotos: Photo[] = [
 
 export default function AlbumPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
 
   const sortedPhotos = [...mockPhotos].sort((a, b) => {
 
@@ -55,13 +57,40 @@ export default function AlbumPage() {
     });
   };
 
+  const handleAutoPlayToggle = () => {
+    setIsAutoPlaying((previousValue) => !previousValue);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlaying) {
+      return;
+    }
+
+    const intervalId = setInterval(() => {
+      setCurrentIndex((previousIndex) => {
+        if (previousIndex === sortedPhotos.length - 1) {
+          return 0;
+        }
+
+        return previousIndex + 1;
+      });
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isAutoPlaying, sortedPhotos.length]);
+
   return (
     <main>
       <h1>제주도 가족여행</h1>
-      <img src={currentPhoto.imageUrl} alt="제주도 가족여행 사진" />
+      <Image src={currentPhoto.imageUrl} alt="제주도 가족여행 사진" width={1200} height={800} />
       <p>{currentPhoto.takenAt}</p>
       <button onClick={handlePrevious}>이전 사진</button>
       <button onClick={handleNext}>다음 사진</button>
+      <button onClick={handleAutoPlayToggle}>
+        {isAutoPlaying ? '자동재생 끄기' : '자동재생 켜기'}
+      </button>
     </main>
   );
 }

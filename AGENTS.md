@@ -186,14 +186,21 @@ type Photo = {
 
 이번 프로젝트 대화에서 확인한 이해 내용:
 
+- Next.js App Router 프로젝트를 생성하고 `app/.../page.tsx`와 URL 경로의 관계를 확인했다.
+- `'use client'`가 필요한 이유와 `useState`, `useEffect` import 방식을 실습했다.
+- `Photo` 타입과 `Photo[]` 더미 데이터를 직접 작성했다.
+- 타입 정의에서는 세미콜론과 쉼표를 모두 쓸 수 있지만, 실제 객체 데이터의 속성은 쉼표로 구분한다는 차이를 학습했다.
 - 현재 사진 객체를 중복 state로 저장하기보다 `currentIndex`를 state로 두는 이유를 이해한다.
-- `currentPhoto = photos[currentIndex]`로 현재 사진을 계산하는 방식을 이해한다.
+- `currentPhoto = sortedPhotos[currentIndex]`로 현재 사진을 계산하고 한 장만 렌더링했다.
 - 마지막 사진에서 다음을 누르면 첫 사진, 첫 사진에서 이전을 누르면 마지막 사진으로 순환시키는 동작을 이해한다.
 - 이전 state를 기반으로 갱신할 때 함수형 업데이트를 사용하는 흐름을 학습했다.
-- `isAutoPlaying`과 `isLargeView`를 boolean state로 두고 이전 값의 반대로 토글하는 방식을 이해한다.
-- `setInterval`로 반복하고 `clearInterval(timerId)`로 정리해야 하는 이유를 이해한다.
+- `isAutoPlaying`을 boolean state로 두고 이전 값의 반대로 토글하는 방식을 구현했다.
+- `setInterval`로 5초마다 사진을 이동하고 `clearInterval(intervalId)`로 정리하는 자동재생을 구현했다.
 - cleanup이 없으면 타이머가 중복되어 여러 장씩 이동하거나 꺼진 뒤에도 동작할 수 있음을 이해한다.
 - `takenAt` 문자열을 `new Date(...).getTime()`으로 숫자화해 오름차순 정렬하는 원리를 이해한다.
+- `useEffect`가 사용하는 `sortedPhotos.length`를 dependency 배열에 추가하고 lint 경고를 해결했다.
+- 기본 `<img>`를 Next.js `<Image>`로 교체하고 `picsum.photos` 원격 이미지 허용 설정을 추가했다.
+- `npm run lint` 결과 오류와 경고 없이 통과하는 것을 확인했다.
 - Owner 또는 Editor이면서 업로더 본인일 때만 삭제할 수 있다는 권한 조건을 이해한다.
 - `filter`를 사용해 삭제할 ID와 다른 사진만 남기는 원리를 이해한다.
 
@@ -211,11 +218,13 @@ type Photo = {
 
 ## 다음 학습 단계
 
-1. Node.js 버전을 확인한다.
-2. `familery`라는 이름으로 Next.js App Router + TypeScript 프로젝트를 생성한다.
-3. 프로젝트가 정상 실행되는지 기본 화면을 확인한다.
-4. 완성 코드를 제공하기 전에 사용자가 1단계 갤러리의 최소 컴포넌트와 데이터 위치를 다시 짧게 정리한다.
-5. 사진 두 장의 더미 데이터부터 작성해 렌더링하고, 확인 후 8~10장으로 늘린다.
+1. 현재 두 장인 더미 사진을 8장으로 늘리고 촬영시간 정렬을 다시 검증한다.
+2. `isLargeView` boolean state와 크게 보기 토글 버튼을 구현한다.
+3. 크게 보기 상태에 따라 텍스트, 이미지, 버튼, 터치 영역의 스타일을 함께 변경한다.
+4. 가짜 `currentUser`와 Owner/Editor 역할 데이터를 추가한다.
+5. 역할과 `uploaderId`를 이용해 `canDelete`를 계산하고 삭제 버튼을 조건부 렌더링한다.
+6. `filter`를 이용한 더미 사진 삭제와 마지막 사진 삭제 후 인덱스 범위 처리를 구현한다.
+7. 1단계 기능을 점검하고 lint를 통과한 뒤 커밋·push한다.
 
 ## 권한 구현 주의사항
 
