@@ -1,9 +1,236 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Familery 프로젝트 지침
 
-# This is NOT the Next.js you know
+프로젝트의 제품 기획, 기능 범위, 데이터 모델, 단계별 로드맵은 루트의 `PROJECT.md`를 먼저 읽고 따른다.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+## 프로젝트 개요
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+- 서비스 가칭은 **패밀러리(Familery)**다. `Family + Gallery`를 조합한 이름이다.
+- 가족들이 여행과 모임에서 촬영한 사진을 쉽게 모아 보고 공유하는 웹 기반 가족 사진첩을 만든다.
+- 이 프로젝트의 1차 목적은 React와 Next.js를 실제로 작성하며 학습하는 것이다.
+- 기술 기반은 **Next.js App Router + React + TypeScript**로 한다.
+- 특히 고령자도 별도 설명 없이 사진을 올리고 볼 수 있는 단순하고 큰 UI를 지향한다.
 
-<!-- END:nextjs-agent-rules -->
+## Codex의 역할과 학습 원칙
+
+- 사용자가 VS Code에서 직접 설계하고 코드를 작성하는 것이 핵심이다.
+- 사용자가 요청하지 않은 완성 코드나 기능 전체를 처음부터 대신 작성하지 않는다.
+- 새 개념이나 기능을 시작할 때는 사용자가 먼저 생각하고 작성할 수 있는 짧고 범위가 명확한 과제를 제시한다.
+- 사용자가 막히면 **힌트 → 개념 설명 → 필요할 때 최소 코드** 순서로 돕는다.
+- 특정 단어나 정답을 맞히게 하는 애매한 질문을 하지 않는다. 무엇을 판단하거나 작성해야 하는지 명확히 알려준다.
+- 한 개념을 최소 80% 이상 이해한 것으로 확인하기 전에 다음 개념으로 급하게 넘어가지 않는다.
+- 문법 실수와 개념 이해 부족을 구분한다. 문법을 바로 떠올리지 못했다는 이유만으로 개념을 이해하지 못했다고 판단하지 않는다.
+- 한 번에 너무 많은 문법과 기능을 결합하지 않는다. 작은 동작을 화면에서 확인한 뒤 다음 동작을 붙인다.
+- 코드 검토 시 잘된 판단을 먼저 짚고, 수정할 부분과 이유를 구체적으로 설명한다.
+- 사용자가 피로를 표현하면 학습을 종료한다고 단정하지 말고, 범위를 줄이거나 잠시 쉬었다 이어갈 수 있게 한다.
+- 실습 세션이 끝날 때 이 파일의 `현재 학습 상태`와 `다음 학습 단계`를 최신 상태로 갱신한다. 다른 고정 지침은 임의로 변경하지 않는다.
+
+## 제품 원칙
+
+- 목표는 “설명하지 않아도 사진을 올리고, 설명하지 않아도 사진을 볼 수 있게 한다”이다.
+- 크게 보기 모드는 폰트만 키우지 않는다. 텍스트, 버튼, 터치 영역, 간격을 함께 확대하고 정보 밀도를 낮춘다.
+- 스와이프를 유일한 조작법으로 사용하지 않는다.
+- `이전 사진`, `다음 사진`, `자동으로 보기`처럼 의미가 적힌 큰 버튼을 항상 제공한다.
+- 아이콘만 있는 버튼은 최소화하고 아이콘과 텍스트를 함께 사용한다.
+- 권한이 없는 기능은 프론트에서 숨기되, 실제 서비스 단계에서는 반드시 서버에서도 권한을 검증한다.
+
+## 핵심 사용자와 권한
+
+### Owner
+
+- 앨범을 만든 사용자다.
+- 앨범 설정, 초대, 멤버 권한, 앨범별 비밀번호를 관리한다.
+- 사진을 업로드할 수 있다.
+- 누가 올린 사진이든 삭제할 수 있다.
+
+### Editor
+
+- 유효한 초대 링크 등을 통해 앨범 편집 권한을 얻은 사용자다.
+- 사진을 업로드할 수 있다.
+- 자신이 업로드한 사진만 삭제할 수 있다.
+
+### Viewer
+
+- 현재 범위에는 포함하지 않는다.
+- 추후 열람 전용 역할이 필요할 때 확장할 수 있다.
+
+## 예정 화면
+
+- 로그인 화면
+- 앨범 목록 화면
+- 앨범 상세 및 슬라이드 갤러리 화면
+- 개인 설정 화면
+- Owner 전용 앨범 관리 화면
+- 삭제 확인, 사진 선택, 초대 공유, 비밀번호 입력 등에 사용하는 팝업 또는 다이얼로그
+
+개인 설정과 Owner 전용 앨범 관리는 구분한다.
+
+- 개인 설정: 크게 보기 기본값, 자동재생 기본값, 로그아웃 등
+- 앨범 관리: 앨범 정보, 초대, 멤버 권한, 비밀번호, 앨범 삭제 등
+
+## 핵심 기능
+
+- Owner가 앨범을 생성한다.
+- Owner가 초대 URL을 만들고 Web Share API 등 OS 공유 인터페이스를 통해 카카오톡 등으로 공유한다.
+- 초대 토큰은 1회성 또는 만료 방식을 검토한다.
+- 앨범마다 서로 다른 비밀번호를 둘 수 있다.
+- 비밀번호 원문은 저장하지 않고 해시만 저장한다.
+- 기존 멤버는 비밀번호 인증 후 기존 권한을 복원하는 방향을 우선 검토한다.
+- 여러 사용자가 올린 사진도 업로드 시간이 아니라 EXIF 촬영시간인 `takenAt` 기준으로 정렬한다.
+- 촬영시간이 없을 때 사용할 fallback 정책이 필요하다.
+- 앨범의 날짜와 위치 범위에 맞는 업로드 후보 추천 기능을 추후 구현한다.
+- 브라우저가 휴대폰 사진첩을 임의로 탐색할 수 없으므로, 사용자가 사진을 선택한 뒤 EXIF와 GPS를 분석한다.
+- 갤러리는 이전/다음 순환 이동, 모바일 스와이프, 5초 자동 슬라이드, 자동재생 ON/OFF를 제공한다.
+
+## 예상 데이터 모델
+
+```ts
+type User = {
+  id: string;
+  name: string;
+};
+
+type Album = {
+  id: string;
+  ownerId: string;
+  title: string;
+  dateRange: unknown;
+  location: unknown;
+  passwordHash: string | null;
+};
+
+type AlbumMember = {
+  userId: string;
+  albumId: string;
+  role: "owner" | "editor" | "viewer";
+};
+
+type Photo = {
+  id: number;
+  albumId: string;
+  uploaderId: string;
+  takenAt: string;
+  uploadedAt: string;
+  imageUrl: string;
+};
+```
+
+이 모델은 방향을 설명하기 위한 초안이다. 구현 단계에서 필요에 따라 타입과 필드를 구체화한다.
+
+## 단계별 구현 범위
+
+### 1단계: React 갤러리 실습
+
+- Next.js + TypeScript 프로젝트 생성
+- 가짜 앨범과 사진 데이터 8~10장
+- `takenAt` 기준 정렬
+- 현재 사진 렌더링
+- 이전/다음 순환 이동
+- 5초 자동 슬라이드
+- 자동재생 ON/OFF
+- `useEffect`, `setInterval`, cleanup 연습
+- 크게 보기 모드
+- 가짜 `currentUser`와 `owner/editor` 역할
+- 삭제 권한에 따른 삭제 버튼 조건부 렌더링
+- 더미 데이터에서 사진 삭제
+
+### 2단계: 사진 선택과 메타데이터
+
+- 사용자가 사진 선택
+- EXIF 촬영시간과 GPS 분석
+- 앨범 날짜와 위치를 기준으로 업로드 후보 필터
+- 촬영시간이 없는 사진의 fallback 처리
+
+### 3단계: 인증과 서버 권한
+
+- 실제 로그인
+- `AlbumMember` 기반 서버 권한 검사
+- Owner와 Editor의 업로드 및 삭제 권한 검증
+
+### 4단계: 초대와 비밀번호
+
+- 초대 URL과 토큰
+- Web Share API
+- 앨범별 비밀번호
+- 비밀번호 해시 저장과 검증
+- 기존 멤버 권한 복원
+
+### 5단계: 실제 파일 저장
+
+- 실제 Storage 연결
+- 사진 업로드
+- 사진 삭제
+- 저장 결과와 실패 상태 처리
+
+## 1단계에서 구현하지 않는 것
+
+- 실제 로그인
+- 실제 이미지 업로드
+- EXIF 파싱
+- GPS 필터
+- 서버 권한 검사
+- 초대 URL
+- 앨범 비밀번호
+- 실제 Storage
+
+## 현재 학습 상태
+
+사용자는 다음 내용을 학습했다.
+
+- state와 props
+- 부모·자식 데이터 흐름
+- 이벤트에 따른 state 변경과 재렌더링
+- `useEffect` 실행과 cleanup의 목적
+- API 응답 → state → 렌더링 흐름
+- 조건부 렌더링
+- TypeScript 기본 타입
+
+이번 프로젝트 대화에서 확인한 이해 내용:
+
+- 현재 사진 객체를 중복 state로 저장하기보다 `currentIndex`를 state로 두는 이유를 이해한다.
+- `currentPhoto = photos[currentIndex]`로 현재 사진을 계산하는 방식을 이해한다.
+- 마지막 사진에서 다음을 누르면 첫 사진, 첫 사진에서 이전을 누르면 마지막 사진으로 순환시키는 동작을 이해한다.
+- 이전 state를 기반으로 갱신할 때 함수형 업데이트를 사용하는 흐름을 학습했다.
+- `isAutoPlaying`과 `isLargeView`를 boolean state로 두고 이전 값의 반대로 토글하는 방식을 이해한다.
+- `setInterval`로 반복하고 `clearInterval(timerId)`로 정리해야 하는 이유를 이해한다.
+- cleanup이 없으면 타이머가 중복되어 여러 장씩 이동하거나 꺼진 뒤에도 동작할 수 있음을 이해한다.
+- `takenAt` 문자열을 `new Date(...).getTime()`으로 숫자화해 오름차순 정렬하는 원리를 이해한다.
+- Owner 또는 Editor이면서 업로더 본인일 때만 삭제할 수 있다는 권한 조건을 이해한다.
+- `filter`를 사용해 삭제할 ID와 다른 사진만 남기는 원리를 이해한다.
+
+현재 추가 연습이 필요한 부분:
+
+- 함수 이름과 매개변수 이름 구분
+- 함수에 인수를 전달하는 문법
+- 함수 전달과 함수 호출 구분
+- 객체 전체와 `photo.id` 같은 객체 속성 구분
+- 비교식의 결과와 함수 인수 구분
+- `map`, `filter`, 이벤트 콜백을 실제 JSX 안에서 조합하기
+- TypeScript 타입 키워드와 객체·타입 구문의 구두점
+
+이 부분은 개념 부족으로 단정하지 않는다. 현재는 여러 문법을 실전에서 조합하는 연습이 필요한 상태다.
+
+## 다음 학습 단계
+
+1. Node.js 버전을 확인한다.
+2. `familery`라는 이름으로 Next.js App Router + TypeScript 프로젝트를 생성한다.
+3. 프로젝트가 정상 실행되는지 기본 화면을 확인한다.
+4. 완성 코드를 제공하기 전에 사용자가 1단계 갤러리의 최소 컴포넌트와 데이터 위치를 다시 짧게 정리한다.
+5. 사진 두 장의 더미 데이터부터 작성해 렌더링하고, 확인 후 8~10장으로 늘린다.
+
+## 권한 구현 주의사항
+
+1단계에서는 다음과 같은 프론트 조건부 렌더링을 학습할 수 있다.
+
+```ts
+const canDelete =
+  currentRole === "owner" ||
+  (currentRole === "editor" && currentUser.id === currentPhoto.uploaderId);
+```
+
+하지만 실제 서비스에서는 삭제 버튼을 숨기는 것으로 권한 처리를 끝내면 안 된다. 서버가 다음을 다시 검증해야 한다.
+
+- 현재 사용자의 로그인과 세션
+- 해당 앨범의 멤버인지 여부
+- 앨범에서의 역할
+- 삭제 대상 사진의 `uploaderId`
+- 사진이 해당 앨범에 속하는지 여부
